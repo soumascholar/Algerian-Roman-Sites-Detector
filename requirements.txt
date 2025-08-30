@@ -5,3 +5,4 @@ matplotlib
 shapely
 fiona
 pyproj
+folium
