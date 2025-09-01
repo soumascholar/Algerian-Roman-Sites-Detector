@@ -7,4 +7,5 @@ fiona
 pyproj
 folium
 streamlit-folium
-opencv-python
+pillow
+opencv-python-headless
