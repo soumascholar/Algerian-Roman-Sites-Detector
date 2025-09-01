@@ -8,3 +8,7 @@ pyproj
 folium
 streamlit-folium
 pillow
+<<<<<<< HEAD
+=======
+opencv-python-headless
+>>>>>>> 5390e81 (Fixed indentation and updated 2_Roman_Site_Detector.py and 1_Home.py)
