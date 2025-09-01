@@ -188,12 +188,13 @@ if st.session_state.detections:
         det_lon = region_coords['lon'] + (center_x / st.session_state.image.shape[1] - 0.5) * lon_span
         dl_data.append({'class': det['class'], 'confidence': det['confidence'],
                         'explanation': det['explanation'], 'latitude': det_lat, 'longitude': det_lon})
-    dl_gdf = gpd.GeoDataFrame(
-        pd.DataFrame(dl_data),
-        geometry=gpd.points_from_xy(pd.DataFrame(dl_data).longitude, pd.DataFrame(dl_data).latitude),
-        crs="EPSG:4326"
-    )
-   st.download_button(
+  dl_gdf = gpd.GeoDataFrame(
+    pd.DataFrame(dl_data),
+    geometry=gpd.points_from_xy(pd.DataFrame(dl_data).longitude, pd.DataFrame(dl_data).latitude),
+    crs="EPSG:4326"
+)
+
+st.download_button(
     label="📥 Download as GeoJSON",
     data=dl_gdf.to_json(),
     file_name=f"{selected_region_name}_detections.geojson",
@@ -201,6 +202,7 @@ if st.session_state.detections:
     use_container_width=True,
     key=f"download_geojson_{selected_region_name}_{st.session_state.map_key}"
 )
+
 
         key=f"download_geojson_{selected_region_name}"
     )
