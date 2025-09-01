@@ -176,6 +176,7 @@ if st.session_state.detections:
     for i, det in enumerate(st.session_state.detections):
         with st.expander(f"📍 Detection #{i+1}: {det['class']} (Confidence: {det['confidence']:.0%})", expanded=False):
             st.write(det['explanation'])
+    
     st.markdown("---")
     st.subheader("Download Detections")
     dl_data = []
@@ -186,25 +187,29 @@ if st.session_state.detections:
         center_y = (box[1]+box[3])/2
         det_lat = region_coords['lat'] + (0.5 - center_y / st.session_state.image.shape[0]) * lat_span
         det_lon = region_coords['lon'] + (center_x / st.session_state.image.shape[1] - 0.5) * lon_span
-        dl_data.append({'class': det['class'], 'confidence': det['confidence'],
-                        'explanation': det['explanation'], 'latitude': det_lat, 'longitude': det_lon})
-  dl_gdf = gpd.GeoDataFrame(
-    pd.DataFrame(dl_data),
-    geometry=gpd.points_from_xy(pd.DataFrame(dl_data).longitude, pd.DataFrame(dl_data).latitude),
-    crs="EPSG:4326"
-)
+        dl_data.append({
+            'class': det['class'],
+            'confidence': det['confidence'],
+            'explanation': det['explanation'],
+            'latitude': det_lat,
+            'longitude': det_lon
+        })
 
-st.download_button(
-    label="📥 Download as GeoJSON",
-    data=dl_gdf.to_json(),
-    file_name=f"{selected_region_name}_detections.geojson",
-    mime="application/json",
-    use_container_width=True,
-    key=f"download_geojson_{selected_region_name}_{st.session_state.map_key}"
-)
-
-
-        key=f"download_geojson_{selected_region_name}"
+    dl_gdf = gpd.GeoDataFrame(
+        pd.DataFrame(dl_data),
+        geometry=gpd.points_from_xy(pd.DataFrame(dl_data).longitude, pd.DataFrame(dl_data).latitude),
+        crs="EPSG:4326"
     )
+
+    st.download_button(
+        label="📥 Download as GeoJSON",
+        data=dl_gdf.to_json(),
+        file_name=f"{selected_region_name}_detections.geojson",
+        mime="application/json",
+        use_container_width=True,
+        key=f"download_geojson_{selected_region_name}_{st.session_state.map_key}"
+    )
+
 else:
     st.info("Click 'Analyze Region with AI' to search for potential sites.")
+
